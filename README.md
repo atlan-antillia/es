@@ -100,7 +100,7 @@ COLOR="#ffffff" SIZE="-1">&nbsp;&nbsp;Es++ Class Library
 <!-- Top anchors begin -->
 
 <table cellpadding="4"  border="0"  cellspacing="4"><tr>
-
+<!--
 <td class="left">
 &nbsp;
 <a href="../index.html">
@@ -110,7 +110,7 @@ COLOR="#ffffff" SIZE="-1">&nbsp;&nbsp;Es++ Class Library
 </a>
 &nbsp;
 </td>
-
+-->
 <td  class ="left">
 &nbsp;
 <a href="http://www.antillia.com/es++/samples.html">
