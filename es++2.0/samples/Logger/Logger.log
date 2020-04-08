@@ -1,0 +1,16 @@
+2014/03/01 10:15:36 DEBUG: Logger.cpp (87) main: テスト開始
+2014/03/01 10:15:36 DEBUG: Logger.cpp (45) MbString: MbString#MbString(const char* string='NFV: ネットワーク機能仮想化')
+2014/03/01 10:15:36 DEBUG: Logger.cpp (45) MbString: MbString#MbString(const char* string='OpenFlow: オープンフロー')
+2014/03/01 10:15:36 DEBUG: Logger.cpp (54) MbString: MbString#MbString(const MbString& string='NFV: ネットワーク機能仮想化')
+2014/03/01 10:15:36 DEBUG: Logger.cpp (66) WcString: WcString#WcString(const wchar_t* string='Goodbye world. さようなら世界')
+2014/03/01 10:15:36 DEBUG: Logger.cpp (66) WcString: WcString#WcString(const wchar_t* string='Hello world. こんにちは世界')
+2014/03/01 10:15:36 DEBUG: Logger.cpp (75) WcString: WcString#WcString(const WcString& string='Goodbye world. さようなら世界')
+2014/03/01 10:15:36 ERR: Logger.cpp (116) main: Exception: NULL string
+2015/03/27 06:09:32 DEBUG: Logger.cpp (87) main: テスト開始
+2015/03/27 06:09:32 DEBUG: Logger.cpp (45) MbString: MbString#MbString(const char* string='NFV: ネットワーク機能仮想化')
+2015/03/27 06:09:32 DEBUG: Logger.cpp (45) MbString: MbString#MbString(const char* string='OpenFlow: オープンフロー')
+2015/03/27 06:09:32 DEBUG: Logger.cpp (54) MbString: MbString#MbString(const MbString& string='NFV: ネットワーク機能仮想化')
+2015/03/27 06:09:32 DEBUG: Logger.cpp (66) WcString: WcString#WcString(const wchar_t* string='Goodbye world. さようなら世界')
+2015/03/27 06:09:32 DEBUG: Logger.cpp (66) WcString: WcString#WcString(const wchar_t* string='Hello world. こんにちは世界')
+2015/03/27 06:09:32 DEBUG: Logger.cpp (75) WcString: WcString#WcString(const WcString& string='Goodbye world. さようなら世界')
+2015/03/27 06:09:32 ERR: Logger.cpp (116) main: Exception: NULL string

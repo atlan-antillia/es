@@ -1,0 +1,9 @@
+2017/07/10 06:51:34 DEBUG: テスト開始
+2017/07/10 06:51:34 DEBUG: MbString#MbString(const char* string='NFV: ネットワーク機能仮想化')
+2017/07/10 06:51:34 DEBUG: MbString#MbString(const char* string='OpenFlow: オープンフロー')
+2017/07/10 06:51:34 DEBUG: MbString#MbString(const MbString& string='NFV: ネットワーク機能仮想化')
+2017/07/10 06:51:34 DEBUG: WcString#WcString(const wchar_t* string='Goodbye world. さようなら世界')
+2017/07/10 06:51:34 DEBUG: WcString#WcString(const wchar_t* string='Hello world. こんにちは世界')
+2017/07/10 06:51:34 DEBUG: WcString#WcString(const WcString& string='Goodbye world. さようなら世界')
+2017/07/10 06:51:34 ERR: Exception: NULL string
+2017/07/10 06:51:34 DEBUG: テスト終了
