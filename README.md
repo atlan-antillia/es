@@ -60,6 +60,7 @@ function confirmation(message, url) {
 <!--
 #00eecc }
  -->
+ <!--
 <title>
 Antillia.com
 </title>
@@ -77,8 +78,7 @@ Antillia.com
 </font>
 </td>
 </table>
-
-
+-->
 <!-- Right Begin -->
 <!--
 ================================================================================================
