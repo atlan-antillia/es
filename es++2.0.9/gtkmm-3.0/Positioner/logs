@@ -1,0 +1,14 @@
+In file included from Positioner.cpp:36:0:
+../../include/es++/gtkmm-3.0/Positioner.h:184:8: error: ‘void Es::Positioner::set_value_changed_callback(Es::SigcCallback)’ cannot be overloaded
+   void set_value_changed_callback(SigcCallback callback)
+        ^
+../../include/es++/gtkmm-3.0/Positioner.h:115:8: error: with ‘void Es::Positioner::set_value_changed_callback(Es::SigcCallback)’
+   void set_value_changed_callback(SigcCallback callback)
+        ^
+../../include/es++/gtkmm-3.0/Positioner.h: In constructor ‘Es::Positioner::Positioner(int, int)’:
+../../include/es++/gtkmm-3.0/Positioner.h:71:35: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+     char* items[] = {"X", "Y", "Z"};
+                                   ^
+../../include/es++/gtkmm-3.0/Positioner.h:71:35: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+../../include/es++/gtkmm-3.0/Positioner.h:71:35: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+make: *** [Positioner] エラー 1

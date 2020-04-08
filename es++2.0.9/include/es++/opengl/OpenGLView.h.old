@@ -1,0 +1,211 @@
+/******************************************************************************
+ *
+ * Copyright (c) 2017 Antillia.com TOSHIYUKI ARAI. ALL RIGHTS RESERVED.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions, and the following disclaimer.
+ *  
+ * 2. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR 
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ *  OpenGLView.h
+ *
+ *****************************************************************************/
+
+//2017/10/25
+
+#include <es++/Exception.h>
+#include <gtkmm/drawingarea.h>
+#include <cairomm/cairomm.h>
+#include <es++/opengl/OpenGLVisualBuffer.h>
+#include <es++/opengl/OpenGLVisual.h>
+#include <es++/opengl/OpenGLContext.h>
+#include <es++/opengl/OpenGLMainView.h>
+#include <es++/opengl/OpenGLImageInfo.h>
+
+using namespace Gtk;
+
+namespace Es {
+
+class OpenGLView: public Gtk::DrawingArea {
+private:
+  ::Display*         xdisplay;
+  ::Window           xwindow;
+  OpenGLContext*   context;
+  int              bufferType;
+	
+public:
+  OpenGLView()
+  :DrawingArea()
+  ,xdisplay(NULL)
+  ,xwindow(None)
+  ,context(NULL)
+  {
+    xdisplay = gdk_x11_get_default_xdisplay();
+  }
+
+  void initialize(OpenGLMainView* mainv)
+  {
+    //Shallow copy of a openGLContext from the parent.
+
+    printf("BufferType %d\n", bufferType);
+  }
+
+  virtual void display()
+  {
+    printf("display\n");
+  }
+
+  int width()
+  {
+    Gtk::Allocation allocation = get_allocation();
+    return allocation.get_width();
+    int h = allocation.get_height();
+  }
+
+  int height()
+  {
+    Gtk::Allocation allocation = get_allocation();
+    return allocation.get_height();
+  }
+  void setViewPort()
+  {
+    int w = width();
+    int h = height();
+       
+    printf("OpenGLView::setViewPort w=%d h=%d\n", w, h);
+    glViewport(0, 0, w, h);
+  }
+
+  //2017/03/01
+  void setPerspective(GLdouble fovy=16.0,
+        GLdouble zNear=0.5,
+        GLdouble zFar =100.0f)
+  {
+     //Set a proportional perspective.
+     glMatrixMode(GL_PROJECTION);
+     glLoadIdentity();
+     int w = width();
+     int h = height();
+     if (h > 0) {
+       GLdouble aspect = (GLdouble)w / (GLdouble)h;
+       gluPerspective(fovy, aspect, zNear, zFar);
+     }
+     glMatrixMode(GL_MODELVIEW);
+     glLoadIdentity();
+  }
+
+
+  virtual void initialize()
+  {
+
+  }
+
+  void on_map()
+  {
+    printf("OpenGLView::mapNotify\n");
+    //Glib::RefPtr<Gdk::Window> gdk_window = get_window();
+    //xwindow =  gdk_x11_window_get_xid(Glib::unwrap(get_window() ) );
+    //xwindow =  gdk_x11_window_get_xid(gdk_window);
+    
+/*
+    if (xwindow != None) {
+      context -> makeCurrent(xwindow);
+     printf("makeCurrent\n");
+    }
+*/
+ //   setViewPort();
+  /*	
+    Dimension w = width();
+    Dimension h = height();
+
+    resize(w, h);
+  */
+    initialize();
+  }
+
+  virtual void resize(int width, int height)
+  {
+  }
+	
+/*
+  void on_configure()
+  {
+    //printf("OpenGLView::ConfigureNotify\n");
+    setViewPort();
+    //Call resize
+  	
+    Dimension w = width();
+    Dimension h = height();
+
+    //Call a virtual resize method
+    //resize(w, h);
+  }
+*/
+  void swapBuffers()
+  {
+    glXSwapBuffers(getDisplay(), getWindow());
+  }
+	
+  //X11 Default Display
+  ::Display* getDisplay()
+  {
+    return xdisplay;
+  }
+
+  //X11 Window
+  ::Window   getWindow()
+  {
+     return xwindow; 
+  }
+
+  //gtkmm 3.0
+  bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) 
+  {
+    Gtk::Allocation allocation = get_allocation();
+    int w = width();
+    int h = height();
+
+    cr->set_source_rgb(1.0, 0.0, 0.0);
+    cr->rectangle(0, 0, w, h);
+    cr->fill();
+
+    if (xwindow != None) {
+      context -> makeCurrent(xwindow);
+     printf("makeCurrent\n");
+    }
+
+    display();
+ 
+   glFlush();
+
+    if (bufferType == OpenGL_DOUBLE_BUFFER) {
+      swapBuffers();
+    }
+    return true;
+    return true;
+  }
+
+  void refresh()
+  {
+    unmap();
+    map();
+  }
+};
+}
+

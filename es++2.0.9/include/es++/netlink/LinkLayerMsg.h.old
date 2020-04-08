@@ -1,0 +1,308 @@
+/******************************************************************************
+ *
+ * Copyright (c) 2014 Antillia.com TOSHIYUKI ARAI. ALL RIGHTS RESERVED.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions, and the following disclaimer.
+ *  
+ * 2. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR 
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ *  LinkLayerMsg.h
+ *
+ *****************************************************************************/
+
+#pragma once
+
+#include <oz++/CommonObject.h>
+#include <oz++/StringBufferT.h>
+#include <oz++/String.h>
+#include <oz++/Pair.h>
+#include <oz++/KeyNamePairs.h>
+#include <oz++/Socket.h>
+#include <oz++/Exception.h>
+
+#include <oz++/Attribute.h>
+#include <oz++/netlink/SocketNetlink.h>
+#include <oz++/netlink/SockAddrNetlink.h>
+
+
+#include <oz++/netlink/NetlinkMsg.h>
+
+
+/* struct ifinfomsg
+ * passes link level specific information, not dependent
+ * on network protocol.
+ */
+/*
+From rtnetlink.h
+struct ifinfomsg {
+  unsigned char   ifi_family;
+  unsigned char   __ifi_pad;
+  unsigned short  ifi_type;       // ARPHRD_* 
+  int     ifi_index;      // Link index   
+  unsigned    ifi_flags;      // IFF_* flags  
+  unsigned    ifi_change;     // IFF_* change mask 
+};
+*/
+
+namespace OZ {
+
+class LinkLayerMsg :public CommonObject {
+private:
+  struct ifinfomsg* message;
+  Attribute* attributes[IFLA_MAX+1];
+	
+public:
+  LinkLayerMsg(void* msg)
+	:message((struct ifinfomsg*)msg)
+  {
+  	for(int i = 0;  i<= IFLA_MAX; i++) {
+  		attributes[i] = NULL;
+  	}
+
+  	if (msg == NULL) {
+  		throw IException("Invalid argument");	
+  	}
+  }
+
+public:
+  LinkLayerMsg(struct ifinfomsg* msg)
+	:message(msg)
+  {
+  	for(int i = 0;  i<= IFLA_MAX; i++) {
+  		attributes[i] = NULL;
+  	}
+
+  	if (msg == NULL) {
+  		throw IException("Invalid argument");	
+  	}
+  }
+
+public:
+  ~LinkLayerMsg()
+  {
+  	for(int i = 0;  i<= IFLA_MAX; i++) {
+  		if (attributes[i] != NULL) {
+  			delete attributes[i];
+  		}
+  	}
+  }
+
+  void setAttribute(int index, Attribute* attr)
+  {
+  	if (index >= 0 && index <= IFLA_MAX) {
+  		attributes[index] = attr;
+  	}
+  }
+	
+  Attribute* getAttribute(int index)
+  {
+  	Attribute* attr = NULL;
+  	if (index >= 0 && index <= IFLA_MAX) {
+  		attr = attributes[index];
+  	}
+  	return attr;
+  }
+
+  struct rtattr* routingAttr()
+  {
+  	return IFLA_RTA(message);
+
+  }
+	
+  int size() 
+  {
+  	return sizeof(struct ifinfomsg);
+  }
+	
+  void family(unsigned char family)
+  {
+    message -> ifi_family = family; 
+  }
+	
+  unsigned char family()
+  {
+    return message -> ifi_family;
+  }
+
+  void type(unsigned short type)
+  {
+  	message -> ifi_type= type; 
+  }
+
+  unsigned short type()
+  {
+  	return message -> ifi_type; 
+  }
+	
+  void index(int index)
+  {
+  	message -> ifi_index = index;
+  }
+	
+  int index()
+  {
+  	return message -> ifi_index;
+  }
+	
+  void flags(unsigned int flags)
+  {
+    message -> ifi_flags = flags;
+  }
+  unsigned int flags()
+  {
+    return message -> ifi_flags; 
+  }
+
+  void change(unsigned int change)
+  {
+  	message -> ifi_change = change;
+  }
+  	
+  unsigned int change()
+  {
+  	return message -> ifi_change; 
+  }
+  	
+  void displayAttributes()
+  {
+  	for(int i = 0;  i<= IFLA_MAX; i++) {
+  		if (attributes[i] != NULL) {
+  			attributes[i] -> display();
+  		}
+  	}
+  }
+
+  void displayAttribute(int index)
+  {
+  	if ( index >= 0 && index <= IFLA_MAX) {
+  		if (attributes[index] != NULL) {
+  			attributes[index] -> display();
+  		}
+  	}
+  }
+	
+  void displayAttributesMin()
+  {
+  	displayAttribute(IFLA_IFNAME);
+  	displayAttribute(IFLA_ADDRESS);
+  	displayAttribute(IFLA_BROADCAST);
+  }
+
+public:
+  void displayMin()
+  {
+    printf("IFINFO family: %s\n", getFamily(message -> ifi_family));
+    printf("IFINFO type:   %s\n", getType(message -> ifi_type));
+    printf("IFINFO index:  %d\n", message -> ifi_index);
+    printf("IFINFO flags:  %s\n", (const char*)getFlags(message -> ifi_flags));
+    printf("IFINFO change: %x\n", message -> ifi_change);
+  	
+  	displayAttributesMin();
+  }
+
+public:
+  void display()
+  {
+    printf("IFINFO family: %s\n", getFamily(message -> ifi_family));
+    printf("IFINFO type:   %s\n", getType(message -> ifi_type));
+    printf("IFINFO index:  %d\n", message -> ifi_index);
+    printf("IFINFO flags:  %s\n", (const char*)getFlags(message -> ifi_flags));
+    printf("IFINFO change: %x\n", message -> ifi_change);
+  	
+  	displayAttributes();
+  }
+
+public:
+  static const char* getFamily(unsigned char family)
+  {
+    static Pair<int, const char*> families[] = {
+      {AF_UNIX,   "AF_UNIX"},
+      {AF_INET,   "AF_INET"},
+      {AF_INET6,  "AF_INET6"},
+      {AF_IPX,    "AF_IPX"},
+      {AF_NETLINK,  "AF_NETLINK"},
+      {AF_X25,    "AF_X25"},
+      {AF_AX25,   "AF_AX25"},
+      {AF_ATMPVC,   "AF_ATMPVC"},
+      {AF_APPLETALK,"AF_APPLETALK"},
+      {AF_PACKET,   "AF_PACKET"},
+      {AF_UNSPEC,   "AF_UNSPEC"},
+    };
+  	KeyNamePairs<int> pairs(families, SizeOf(families));
+  	return pairs.match(family);
+  }
+
+
+public:
+  static const char* getType(unsigned short type)
+  {
+    static Pair<unsigned short, const char*> types[] =
+    {
+      {ARPHRD_NETROM, "ARPHRD_NETROM"},   // From KA9Q: NET/ROM pseudo.
+      {ARPHRD_ETHER,  "ARPHRD_ETHER"},   // Ethernet 10/100Mbps.  
+      {ARPHRD_EETHER, "ARPHRD_EETHER"},   // Experimental Ethernet. 
+      {ARPHRD_AX25,   "ARPHRD_AX25"},   // AX.25 Level 2. 
+      {ARPHRD_PRONET, "ARPHRD_PRONET"},  // PROnet token ring. 
+      {ARPHRD_CHAOS,  "ARPHRD_CHAOS"},    // Chaosnet. 
+      {ARPHRD_IEEE802,"ARPHRD_IEEE802"},    // IEEE 802.2 Ethernet/TR/TB.
+      {ARPHRD_ARCNET, "ARPHRD_ARCNET"},     // ARCnet. 
+      {ARPHRD_APPLETLK,"ARPHRD_APPLETLK"},  // APPLEtalk. 
+      {ARPHRD_DLCI,   "ARPHRD_DLCI"},     // Frame Relay DLCI. 
+      {ARPHRD_ATM,  "ARPHRD_ATM"},      // ATM.  
+      {ARPHRD_METRICOM, "ARPHRD_METRICOM"},   // Metricom STRIP (new IANA id). 
+      {ARPHRD_IEEE1394, "ARPHRD_IEEE1394"},   // IEEE 1394 IPv4 - RFC 2734.
+      {ARPHRD_EUI64,  "ARPHRD_EUI64"},    // EUI-64.  
+      {ARPHRD_INFINIBAND, "ARPHRD_INFINIBAND"},// InfiniBand.   
+    };
+  	KeyNamePairs<unsigned short> pairs(types, SizeOf(types));
+  	return pairs.match(type);
+  }
+  
+public:
+  static String getFlags(unsigned int flags)
+  {
+    static Pair<unsigned int, const char*> ifFlags[] = {
+      {IFF_UP,        "UP"},
+      {IFF_BROADCAST,     "BROADCAST"},
+      {IFF_DEBUG,       "DEBUG"},
+      {IFF_LOOPBACK,      "LOOPBACK"},
+      {IFF_POINTOPOINT,     "POINTOPOINT"},
+      {IFF_NOTRAILERS,    "NOTRAILERS"},
+      {IFF_RUNNING,       "RUNNING"},
+      {IFF_NOARP,       "NOARP"},
+      {IFF_PROMISC,       "PROMISC"},
+      {IFF_MASTER,      "MASTER"},
+      {IFF_SLAVE,       "SLAVE"},
+      {IFF_MULTICAST,     "MULTICAST"},
+      {IFF_PORTSEL,       "PORTSEL"},
+      {IFF_AUTOMEDIA,     "AUTOMEDIA"},
+      {IFF_DYNAMIC,       "DYNAMIC"},
+      {IFF_LOWER_UP,      "LOWER_UP"},
+      {IFF_DORMANT,       "DORMANT"},
+      {IFF_ECHO,        "ECHO"},
+    };
+  	KeyNamePairs<unsigned int> pairs(ifFlags, SizeOf(ifFlags));
+  	return pairs.bitMatch(flags);
+
+  }
+};
+
+}
+
