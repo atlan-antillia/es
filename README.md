@@ -42,10 +42,10 @@ td {
     height: auto;
   }
 }
--->
+
 </style>
 
-<!--
+
 <script type="text/javascript">
 function confirmation(message, url) {
   if(window.confirm(message)){
@@ -54,8 +54,8 @@ function confirmation(message, url) {
       //window.alert('Canceled');
   }
 }
--->
 </script>
+-->
 
 <!--
 #00eecc }
