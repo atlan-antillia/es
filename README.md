@@ -59,10 +59,11 @@ function confirmation(message, url) {
 
 <!--
 #00eecc }
- -->
 <title>
 Antillia.com
 </title>
+ -->
+
 </head>
 
 <body bgcolor="white" topmargin="0" leftmargin="0">
