@@ -42,10 +42,8 @@ td {
     height: auto;
   }
 }
--->
 </style>
 
-<!--
 <script type="text/javascript">
 function confirmation(message, url) {
   if(window.confirm(message)){
@@ -54,12 +52,13 @@ function confirmation(message, url) {
       //window.alert('Canceled');
   }
 }
--->
 </script>
+-->
 
 <!--
 #00eecc }
  -->
+ <!--
 <title>
 Antillia.com
 </title>
@@ -77,8 +76,7 @@ Antillia.com
 </font>
 </td>
 </table>
-
-
+-->
 <!-- Right Begin -->
 <!--
 ================================================================================================
@@ -102,7 +100,7 @@ COLOR="#ffffff" SIZE="-1">&nbsp;&nbsp;Es++ Class Library
 <!-- Top anchors begin -->
 
 <table cellpadding="4"  border="0"  cellspacing="4"><tr>
-
+<!--
 <td class="left">
 &nbsp;
 <a href="../index.html">
@@ -112,7 +110,7 @@ COLOR="#ffffff" SIZE="-1">&nbsp;&nbsp;Es++ Class Library
 </a>
 &nbsp;
 </td>
-
+-->
 <td  class ="left">
 &nbsp;
 <a href="http://www.antillia.com/es++/samples.html">
@@ -393,7 +391,7 @@ Last modified: 21 Aug. 2018
 
 <font size = 2 color = "navy" >
 <hr noshade color="navy">
-&nbsp;<b>Last modified: 12 Feb. 2020</b>
+&nbsp;<b>Last modified: 12 Apr. 2020</b>
 </font>
 <br>
 <font color = "navy" size ="2">
